@@ -1,0 +1,13 @@
+header{
+  background-color: #007bff;
+  color: #fff;
+  position: fixed;
+  width: 100%;
+}
+
+header p{
+  font-weight: 700;
+  font-size: 20px;
+  margin: 14px 10px;
+  font-family: 'Source Code Pro'
+}
