@@ -125,7 +125,7 @@ h4{
   text-align: center;
 }
 .content{
-  padding: 105px 30px 30px 30px;
+  padding: 50px 30px 30px 30px;
 }
 
 table{
@@ -138,9 +138,10 @@ table td,th{
 }
 
 input[type="date"]{
-  position: absolute;
-  right: 0px;
-  margin-top: 10px;
+	position: relative;
+	z-index: 0;
+	top: -30px;
+	float: right;
 }
 
 #footer{
@@ -149,3 +150,6 @@ input[type="date"]{
 	justify-content: space-between;
 }
 
+textarea:focus{
+	outline: 1px solid #007bff
+}

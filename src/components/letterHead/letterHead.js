@@ -2,8 +2,9 @@ import React from 'react';
 import './letterHead.css';
 import om from './../../assets/om.jpg';
 import logo from './../../assets/logo.png';
+import { connect } from 'react-redux';
 
-export default class LetterHead extends React.Component {
+class LetterHead extends React.Component {
 
   constructor(){
     super();
@@ -50,12 +51,9 @@ export default class LetterHead extends React.Component {
         <div id="row">
           <p id="ref">Ref.:</p>
           <div>
-            <p id="date" onClick={this.toggleDateInput}>Date: &nbsp;&nbsp;
-              {this.state.date.split('-')[2]} - {this.state.date.split('-')[1]} - {this.state.date.split('-')[0]}
+            <p id="date">Date: &nbsp;&nbsp;
+              {this.props.date.split('-')[2]} - {this.props.date.split('-')[1]} - {this.props.date.split('-')[0]}
             </p>
-            <input type="date" value={this.state.date} style={{display: this.state.dateInput}}
-              onChange={e => this.setState({date: e.target.value, dateInput: 'none'})}
-              onBlur={() => this.setState({dateInput: 'none'})}/>
           </div>
         </div>
 
@@ -64,3 +62,9 @@ export default class LetterHead extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  date: state.quotation.date
+})
+
+export default connect(mapStateToProps)(LetterHead)

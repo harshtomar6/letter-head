@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
 import LetterHead from './../letterHead/letterHead';
+import { connect } from 'react-redux';
+import { postQuotation } from './../../actions/quotation';
 
-export default class Preview extends React.Component {
+class Preview extends React.Component {
 
   constructor(){
     super();
@@ -20,7 +22,7 @@ export default class Preview extends React.Component {
   }
 
   renderTable = () => {
-    let {description, amount} = this.props.location.params;
+    let {description, amount} = this.props.quotation;
 
     let table = description.map((cell, index) => 
       <tr>
@@ -33,6 +35,13 @@ export default class Preview extends React.Component {
   }
 
   handlePrint = () => {
+    this.props.postQuotation({
+      to: this.props.quotation.to,
+      body: this.props.quotation.body,
+      date: this.props.quotation.date,
+      description: this.props.quotation.description,
+      amount: this.props.quotation.amount
+    });
     this.setState({display: 'none'}, () => {
       window.print();
       this.setState({display: 'block'})
@@ -62,8 +71,7 @@ export default class Preview extends React.Component {
       justifyContent: 'flex-end',
       display: this.state.display
     }
-    const { params } = this.props.location
-    console.log(params);
+    const params = this.props.quotation;
     return (
       <Fragment>
         <div id="preview">
@@ -128,3 +136,11 @@ export default class Preview extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  quotation: state.quotation
+})
+
+export default connect(mapStateToProps, {
+  postQuotation
+})(Preview);

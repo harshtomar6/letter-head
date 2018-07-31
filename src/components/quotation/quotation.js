@@ -1,18 +1,12 @@
 import React, {Fragment} from 'react';
 import { Link } from 'react-router-dom';
 import Header from './../header/header';
+import { connect } from 'react-redux';
+import { updateQuotationTo, updateQuotationBody,
+  addNewField, updateDescription, updateAmount,
+  updateDate } from './../../actions/quotation';
 
-export default class Quotation extends React.Component {
-
-  constructor(){
-    super();
-    this.state = {
-      to: 'Some Name\nSome Department\nSome Address',
-      body: 'I hereby quoting for some product',
-      description: ['Some Product'],
-      amount: ['₹  ']
-    }
-  }
+class Quotation extends React.Component {
 
   renderTables = () => {
     const textareaStyles = {
@@ -21,19 +15,21 @@ export default class Quotation extends React.Component {
       resize:'none'
     }
 
-    let table = this.state.description.map((cell, i) => 
+    let { description, amount } = this.props.quotation; 
+
+    let table = description.map((cell, i) => 
       <tr>
         <td>
 
         <textarea style={{...textareaStyles, width:'100%' }}
-          value={this.state.description[i]}
-          onChange={e => this.handleDescriptionChange(i, e.target.value)}>
+          value={description[i]}
+          onChange={e => {this.props.updateDescription(i, e.target.value)}}>
           </textarea>
         </td>
         <td>
         <textarea style={{...textareaStyles, width: '100%'}}
-          value={this.state.amount[i]} 
-          onChange={e => this.handleAmountChange(i, e.target.value)}>
+          value={amount[i]} 
+          onChange={e => this.props.updateAmount(i, e.target.value)}>
         </textarea>
         </td>
         
@@ -43,56 +39,13 @@ export default class Quotation extends React.Component {
     return table;
   }
 
-  handleAmountChange = (index, data) => {
-    let a = this.state.amount;
-
-    a[index] = data;
-    this.setState({
-      amount: a
-    });
-  }
-
-  handleDescriptionChange = (index,data) => {
-    let a = this.state.description;
-
-    a[index] = data;
-    this.setState({
-      description: a
-    })
-  }
-
-  handleClick = () => {
-    let d = this.state.description;
-    let a = this.state.amount;
-
-    d.push('Some great Product');
-    a.push('₹ ');
-
-    this.setState({
-      description: d,
-      amount: a
-    });
-  }
-
-  handleExport = () => {
-    this.props.history.push({
-      pathname: "/preview",
-      params: {
-          to: this.state.to,
-          body: this.state.body,
-          description: this.state.description,
-          amount: this.state.amount
-        }
-    });
-  }
-
   render() {
 
     const textareaStyles = {
       fontFamily: 'sans-serif', 
       fontSize:'16px', 
       resize:'none',
-      overflow: 'initial',
+      overflow: 'initial'
     }
 
     const btnStyles = {
@@ -121,20 +74,23 @@ export default class Quotation extends React.Component {
 
     return (
       <Fragment>
-        <Header/>
-        
-        <div className="content">
+        <Header title="New Quotation" icon history={this.props.history}/>
+
+        <div className="content" style={{paddingTop: '105px'}}>
+          <input type="date" value={this.props.quotation.date}
+            onChange={e => {this.props.updateDate(e.target.value)}}/>
+
           <h4 id="head">QUOTATION</h4><br />
           <p>To,<br/>
-            <textarea value={this.state.to} 
-              onChange={e => this.setState({to: e.target.value})}
+            <textarea value={this.props.quotation.to} 
+              onChange={e => {this.props.updateQuotationTo(e.target.value)}}
               style={textareaStyles} rows={4}>
             </textarea>
           </p>
           <p>Respected Sir,<br />
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <textarea style={{...textareaStyles, width: '99%'}} value={this.state.body}
-              onChange={e => this.setState({body: e.target.value})}
+            <textarea style={{...textareaStyles, width: '99%'}} value={this.props.quotation.body}
+              onChange={e => {this.props.updateQuotationBody(e.target.value)}}
               rows={1}>
             </textarea>
             <br />
@@ -152,8 +108,8 @@ export default class Quotation extends React.Component {
               {this.renderTables()}
             </tbody>
           </table>
-          <button style={btnStyles} onClick={this.handleClick}>
-            Add New
+          <button style={btnStyles} onClick={() => {this.props.addNewField()}}>
+            <i className="fa fa-plus"></i> &nbsp;Add New
           </button>
 
           <p>
@@ -181,22 +137,28 @@ export default class Quotation extends React.Component {
 
         <div style={footerStyles} class="footertab">
           
-          <Link to={{
-            pathname: "/preview",
-            params: {
-                to: this.state.to,
-                body: this.state.body,
-                description: this.state.description,
-                amount: this.state.amount
-              }
-            }}
+          <Link to="/preview"
             style={{...btnStyles, 
               width: window.matchMedia('(min-width: 768px)').matches ? 'auto' : '100%',
               textAlign: 'center',
             }}>
+          <i className="far fa-eye"></i>&nbsp;&nbsp;
           Preview</Link>
         </div>
       </Fragment>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  quotation: state.quotation
+});
+
+export default connect(mapStateToProps, {
+  updateQuotationTo,
+  updateQuotationBody,
+  addNewField,
+  updateDescription,
+  updateAmount,
+  updateDate
+})(Quotation);

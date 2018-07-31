@@ -1,0 +1,23 @@
+.col{
+  width: 100%;
+}
+
+.card{
+  transition: all 0.3s;
+}
+
+.card:hover{
+  box-shadow: 1px 3px 20px 5px rgba(0,0,0,0.15), 0 2px 20px 5px rgba(0,0,0,0.1);
+}
+
+@media(min-width: 576px){
+  .col{
+    width: 50%;
+  }
+}
+
+@media(min-width: 768px){
+  .col{
+    width: 33%;
+  }
+}
